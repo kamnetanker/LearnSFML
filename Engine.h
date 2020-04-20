@@ -35,17 +35,21 @@ public:
 	void operator/=(float* _b);
 };
 class Line {
-protected: 
-	Vector* normal;
-	Position* A;
-	Position* B;
+protected:  
+	Position* Apoint;
+	Position* Bpoint;
+	float a,b,c;
 private: 
 public: 
 	Line(Position* _a, Position* _b);
 	void SetA(Position* _a);
 	void SetB(Position* _b);
-	Position* GetA();
-	Position* GetB();
+	Position* GetApoint();
+	Position* GetBpoint();
+	float GetA();
+	float GetB();
+	float GetC();
+	float GetY(float x);
 	Vector GetNormal();
 	Position* CheckIntersection(Line* _b);
 };
