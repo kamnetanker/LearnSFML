@@ -2,6 +2,9 @@
 #ifndef HEADERS
 #include "Headers.h"
 #endif
+#ifndef _MATH_PROBLEMS_
+#include "MathProblems.h"
+#endif
 #ifndef _SFML_Engine
 #define _SFML_Engine
 #endif

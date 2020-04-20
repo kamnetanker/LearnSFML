@@ -2,6 +2,7 @@
 #ifndef NULLPTRARGEX//The row definition that is used when receiving a null pointer in the function arguments.
 #define NULLPTRARGEX L"Nullptr argument exception"
 #endif
+
 Position::Position(float _x, float _y) {
 	this->x = _x;
 	this->y = _y;
@@ -242,13 +243,13 @@ Position* Line::CheckIntersection(Line* _b) {
 			}
 			float x1 = this->Apoint->GetX(), y1 = this->Apoint->GetY(), x2 = this->Bpoint->GetX(), y2 = this->Bpoint->GetY();
 			float ratioX, ratioY;
-			if (x == x1 && y == y1) {
+			if (FEqual(x,x1) && FEqual(y,y1)) {
 				return new Position(x, y);
 			}
-			else if (x != x1 && y != y1) {
+			else if (!FEqual(x,x1) && !FEqual(y,y1)) {
 				ratioX = (x2 - x1) / (x - x1);
 				ratioY = (y2 - y1) / (y - y1);
-				if (ratioX == ratioY && ratioX>=1 && ratioY>=1) {
+				if (FEqual(ratioX, ratioY) && ratioX>=1 && ratioY>=1) {
 					return new Position(x, y);
 				}
 				else {

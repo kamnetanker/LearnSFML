@@ -36,6 +36,11 @@ using namespace std;
 #include "Lst.h"
 #include "Lst.cpp"
 #endif
+
+#ifndef _MATH_PROBLEMS_
+#include "MathProblems.h"
+//#include "MathProblems.cpp"
+#endif
 //End SelfWrited headers
 
 #ifndef SFML_GRAPHICS_HPP
