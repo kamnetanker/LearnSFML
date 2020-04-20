@@ -179,7 +179,12 @@ void Line::SetA(Position* _a) {
 	}
 }
 void Line::SetB(Position* _b) {
+	if (_b != nullptr) {
 
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
 Position* Line::GetA() {
 
@@ -191,7 +196,12 @@ Vector Line::GetNormal() {
 
 }
 Position* Line::CheckIntersection(Line* _b) {
+	if (_b != nullptr) {
 
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
  
 
@@ -202,18 +212,33 @@ void Collision::SetVelocity(int _x, int _y)
 
 void Collision::SetVelocity(Vector* _v)
 {
+	if(_v!=nullptr){
 	delete this->mv;
 	this->mv = _v;
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
 
-Vector Collision::CheckCollision(Collision& _b)
+Vector Collision::CheckCollision(Collision* _b)
 {
-	return Vector(0,0);
+	if (_b == nullptr) {
+		return Vector(0, 0);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
 
 Engine::Engine(RenderWindow* _window) {
-	this->window = _window;
-	this->event = new Event();
+	if (_window == nullptr) {
+		this->window = _window;
+		this->event = new Event();
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
 void Engine::Update() {
 	CircleShape shape(100.f);
@@ -237,7 +262,13 @@ void Engine::Update() {
 	}
 }
 void Engine::AddObj(Object* _newObj) {
-	if(_newObj!=nullptr)this->objects.push_back(_newObj);
+	if (_newObj != nullptr) {
+		this->objects.push_back(_newObj);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+
 }
 
 

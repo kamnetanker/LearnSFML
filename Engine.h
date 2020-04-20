@@ -57,7 +57,7 @@ protected:
 public:
 	virtual void SetVelocity(int _x, int _y);
 	virtual void SetVelocity(Vector* _v);
-	virtual Vector CheckCollision(Collision& _b);
+	virtual Vector CheckCollision(Collision* _b);
 	virtual void Move();
 };
 class Sphere:public Collision {
@@ -65,7 +65,7 @@ protected:
 	float radius; 
 public:
 	Sphere(float radius, Position* initPos, Vector* initMV = new Vector(0, 0));
-	Vector CheckCollision(Collision& _b);
+	Vector CheckCollision(Collision* _b);
 	void Move();
 };
 class Box :public Collision{
@@ -74,7 +74,7 @@ protected:
 	Line square[4];//Square collider
 public:
 	Box(float _width, float _height, Position* initPos, Vector* initMV = new Vector(0, 0));
-	Vector CheckCollision(Collision& _b);
+	Vector CheckCollision(Collision* _b);
 	void Move();
 };
 

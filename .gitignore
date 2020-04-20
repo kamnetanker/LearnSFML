@@ -3,3 +3,8 @@
 ################################################################################
 
 /Debug
+/SFMLlib
+/x64
+/LearnSFML.vcxproj
+/LearnSFML.vcxproj.filters
+/LearnSFML.vcxproj.user
