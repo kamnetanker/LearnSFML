@@ -54,6 +54,7 @@ public:
 	float GetC();
 	float GetY(float x);
 	Vector GetNormal();
+	bool SegmentBelongment(Position* _arg);
 	Position* CheckIntersection(Line* _b);
 };
 
@@ -71,7 +72,7 @@ class Sphere:public Collision {
 protected:
 	float radius; 
 public:
-	Sphere(float radius, Position* initPos, Vector* initMV = new Vector(0, 0));
+	Sphere(float _radius, Position* _initPos, Vector* _initMV = new Vector(0, 0));
 	Vector CheckCollision(Collision* _b);
 	void Move();
 };
@@ -80,7 +81,7 @@ protected:
 	float width, height;
 	Line square[4];//Square collider
 public:
-	Box(float _width, float _height, Position* initPos, Vector* initMV = new Vector(0, 0));
+	Box(float _width, float _height, Position* _initPos, Vector* _initMV = new Vector(0, 0));
 	Vector CheckCollision(Collision* _b);
 	void Move();
 };

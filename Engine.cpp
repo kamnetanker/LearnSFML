@@ -226,12 +226,39 @@ Vector Line::GetNormal() {//this returns copy of normal
 	Vector ret(this->GetA(), this->GetB());
 	return ret;
 }
+bool Line::SegmentBelongment(Position* _arg) {
+	float x1 = this->Apoint->GetX(), y1 = this->Apoint->GetY(), x2 = this->Bpoint->GetX(), y2 = this->Bpoint->GetY();
+	float x = _arg->GetX(), y = _arg->GetY();
+	float ratioX = 0, ratioY = 0;
+	if (FEqual(x, x1) && FEqual(y, y1) || FEqual(x, x2) && FEqual(y, y2)) {
+		return true;
+	}
+	else if (!FEqual(x, x1) && !FEqual(y, y1) || !FEqual(x, x2) || !FEqual(y, y2)) {
+		ratioX = (x2 - x1) / (x - x1);
+		ratioY = (y2 - y1) / (y - y1);
+		if (FEqual(ratioX, ratioY) && ratioX >= 1 && ratioY >= 1) {
+			return true;
+		}
+		else if (FEqual(x, x1) && ratioY >= 1) {
+			return true;
+		}
+		else if (FEqual(y, y1) && ratioX >= 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
+}
 Position* Line::CheckIntersection(Line* _b) {
 	if (_b != nullptr) {
 		float tmp = this->GetB() * _b->GetA() - this->GetA() * _b->GetB();
 		float x = 0, y = 0;
 		if (tmp != 0) {
-			x = (this->GetC() - _b->GetC()) / tmp;
+			x = (this->GetC() * _b->GetB() - _b->GetC() * this->GetB()) / tmp;
 			if (this->GetB() != 0) {
 				y = this->GetY(x);
 			}
@@ -241,20 +268,9 @@ Position* Line::CheckIntersection(Line* _b) {
 			else {
 				return nullptr;
 			}
-			float x1 = this->Apoint->GetX(), y1 = this->Apoint->GetY(), x2 = this->Bpoint->GetX(), y2 = this->Bpoint->GetY();
-			float ratioX, ratioY;
-			if (FEqual(x,x1) && FEqual(y,y1)) {
-				return new Position(x, y);
-			}
-			else if (!FEqual(x,x1) && !FEqual(y,y1)) {
-				ratioX = (x2 - x1) / (x - x1);
-				ratioY = (y2 - y1) / (y - y1);
-				if (FEqual(ratioX, ratioY) && ratioX>=1 && ratioY>=1) {
-					return new Position(x, y);
-				}
-				else {
-					return nullptr;
-				}
+			Position* ret = new Position(x, y);
+			if (this->SegmentBelongment(ret) && _b->SegmentBelongment(ret)) {
+				return ret;
 			}
 			else {
 				return nullptr;
@@ -289,12 +305,18 @@ void Collision::SetVelocity(Vector* _v)
 Vector Collision::CheckCollision(Collision* _b)
 {
 	if (_b != nullptr) {
+
 		return Vector(0, 0);
 	}
 	else {
 		throw NULLPTRARGEX;
 	}
 }
+
+void Collision::Move()
+{
+}
+
 
 Engine::Engine(RenderWindow* _window) {
 	if (_window != nullptr) {
@@ -336,4 +358,36 @@ void Engine::AddObj(Object* _newObj) {
 
 }
 
+Sphere::Sphere(float _radius, Position* _initPos, Vector* _initMV)
+{
+	if (_initPos!=nullptr&&_initMV!=nullptr) {
+		this->radius = _radius;
+		this->position = _initPos;
+		this->mv = _initMV;
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
 
+Vector Sphere::CheckCollision(Collision* _b)
+{
+	return Vector(0,0);
+}
+
+void Sphere::Move()
+{
+}
+
+Box::Box(float _width, float _height, Position* _initPos, Vector* _initMV)
+{
+}
+
+Vector Box::CheckCollision(Collision* _b)
+{
+	return Vector(0,0);
+}
+
+void Box::Move()
+{
+}
