@@ -1,4 +1,5 @@
 #include "MathProblems.h"
+
 bool FEqual(float a, float b, float epsilon) {
 	float x = a - b;
 	x = (x > 0) ? x : (-1) * x;
@@ -48,4 +49,17 @@ bool DGreaterEqual(double a, double b, double epsilon)
 bool DLessEqual(double a, double b, double epsilon)
 { 
 	return DLess(a, b, epsilon) || DEqual(a, b, epsilon);
+}
+float Q_rsqrt(float number)
+{
+	const float x2 = number * 0.5F;
+	const float threehalfs = 1.5F;
+
+	union {
+		float f;
+		uint32_t i;
+	} conv = { number }; // member 'f' set to value of 'number'.
+	conv.i = 0x5f3759df - (conv.i >> 1);
+	conv.f *= (threehalfs - (x2 * conv.f * conv.f));
+	return conv.f;
 }

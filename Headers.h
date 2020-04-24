@@ -17,6 +17,9 @@
 #ifndef _RANDOM_
 #include <random>
 #endif // _RANDOM_ 
+#ifndef _CSTDINT_
+#include <cstdint>
+#endif//_CSTDINT_
 
 #ifdef _IOSTREAM_
 using namespace std;

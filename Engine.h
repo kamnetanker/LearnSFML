@@ -55,7 +55,7 @@ public:
 	float GetY(float x);
 	Vector GetNormal();
 	bool SegmentBelongment(Position* _arg);
-	Position* CheckIntersection(Line* _b);
+	Position* CheckIntersection(Line* _b, bool _checkBelongment = true);
 };
 
 class Collision {
@@ -65,6 +65,7 @@ protected:
 public:
 	virtual void SetVelocity(int _x, int _y);
 	virtual void SetVelocity(Vector* _v);
+	virtual Position* CheckLine(Position* _from, Line* _to);//checking the object's own intersections. I will use delegation of responsibilities.
 	virtual Vector CheckCollision(Collision* _b);
 	virtual void Move();
 };
@@ -73,6 +74,7 @@ protected:
 	float radius; 
 public:
 	Sphere(float _radius, Position* _initPos, Vector* _initMV = new Vector(0, 0));
+	Position* CheckLine(Position* _from, Line* _to);
 	Vector CheckCollision(Collision* _b);
 	void Move();
 };
@@ -82,6 +84,7 @@ protected:
 	Line square[4];//Square collider
 public:
 	Box(float _width, float _height, Position* _initPos, Vector* _initMV = new Vector(0, 0));
+	Position* CheckLine(Position* _from, Line* _to);
 	Vector CheckCollision(Collision* _b);
 	void Move();
 };

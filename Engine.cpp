@@ -253,7 +253,7 @@ bool Line::SegmentBelongment(Position* _arg) {
 		return false;
 	}
 }
-Position* Line::CheckIntersection(Line* _b) {
+Position* Line::CheckIntersection(Line* _b, bool _checkBelongment) {
 	if (_b != nullptr) {
 		float tmp = this->GetB() * _b->GetA() - this->GetA() * _b->GetB();
 		float x = 0, y = 0;
@@ -270,6 +270,9 @@ Position* Line::CheckIntersection(Line* _b) {
 			}
 			Position* ret = new Position(x, y);
 			if (this->SegmentBelongment(ret) && _b->SegmentBelongment(ret)) {
+				return ret;
+			}
+			else if (_checkBelongment==false) {
 				return ret;
 			}
 			else {
@@ -369,6 +372,14 @@ Sphere::Sphere(float _radius, Position* _initPos, Vector* _initMV)
 		throw NULLPTRARGEX;
 	}
 }
+Position* Sphere::CheckLine(Position* _from, Line* _to) {
+	if (_from != nullptr && _to != nullptr) {
+
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
 
 Vector Sphere::CheckCollision(Collision* _b)
 {
@@ -381,8 +392,16 @@ void Sphere::Move()
 
 Box::Box(float _width, float _height, Position* _initPos, Vector* _initMV)
 {
-}
 
+}
+Position* Box::CheckLine(Position* _from, Line* _to) {
+	if (_from != nullptr && _to != nullptr) {
+
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
 Vector Box::CheckCollision(Collision* _b)
 {
 	return Vector(0,0);
