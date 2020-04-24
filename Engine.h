@@ -29,13 +29,17 @@ public:
 	void SetY(float _y);
 	float GetLength();
 	Vector* operator+(Vector* _b);
-	Vector* operator-(Vector* _b);
+	Vector* operator-(Vector* _b); 
 	void operator+=(Vector* _b);
 	void operator-=(Vector* _b); 
 	Vector* operator*(float* _b);
+	Vector* operator*(Vector* _b);
 	Vector* operator/(float* _b); 
+	Vector* operator/(Vector* _b);
 	void operator*=(float* _b);
 	void operator/=(float* _b);
+	void operator*=(Vector* _b);
+	void operator/=(Vector* _b);
 };
 class Line {
 protected:  
@@ -45,6 +49,8 @@ protected:
 private: 
 public: 
 	Line(Position* _a, Position* _b);
+	Line(Position* _a, float _normalx, float _normaly);
+	Line(Position* _a, Vector* _normal);
 	void SetA(Position* _a);
 	void SetB(Position* _b);
 	Position* GetApoint();
@@ -60,22 +66,25 @@ public:
 
 class Collision {
 protected:
+	Collision();
 	Position* position;
 	Vector* mv;//Movement Vector = mv
 public:
 	virtual void SetVelocity(int _x, int _y);
 	virtual void SetVelocity(Vector* _v);
 	virtual Position* CheckLine(Position* _from, Line* _to);//checking the object's own intersections. I will use delegation of responsibilities.
-	virtual Vector CheckCollision(Collision* _b);
+	virtual Vector* GetNormal(Position* _b);
+	virtual Vector* CheckCollision(Collision* _b);
 	virtual void Move();
 };
-class Sphere:public Collision {
+class Ñircle :public Collision {
 protected:
 	float radius; 
 public:
-	Sphere(float _radius, Position* _initPos, Vector* _initMV = new Vector(0, 0));
+	Ñircle(float _radius, Position* _initPos, Vector* _initMV = new Vector(0, 0));
 	Position* CheckLine(Position* _from, Line* _to);
-	Vector CheckCollision(Collision* _b);
+	Vector* GetNormal(Position* _b);
+	Vector* CheckCollision(Collision* _b);
 	void Move();
 };
 class Box :public Collision{
@@ -85,7 +94,8 @@ protected:
 public:
 	Box(float _width, float _height, Position* _initPos, Vector* _initMV = new Vector(0, 0));
 	Position* CheckLine(Position* _from, Line* _to);
-	Vector CheckCollision(Collision* _b);
+	Vector* GetNormal(Position* _b);
+	Vector* CheckCollision(Collision* _b);
 	void Move();
 };
 

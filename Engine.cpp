@@ -25,19 +25,24 @@ float Position::GetY() {
 	return this->y;
 }
 Vector::Vector(float _x, float _y) : Position(_x, _y) { 
-	this->length = sqrt(_x * _x + _y * _y);//this is Shit
-	if (this->GetLength() != 0) {
-		this->x /= this->length;
-		this->y /= this->length;
+	float q = _x * _x + _y * _y;
+	if (!FEqual(q, 0.0f)) {
+		q = Q_rsqrt(q);
+		this->x *= q;
+		this->y *= q;
+		this->length = 1 / q;
 	}
 }
 void Vector::SetVector(float _x, float _y) {
 	this->SetPosition(_x, _y);
-	this->length = sqrt(_x * _x + _y * _y);//this is Shit too
-	if (this->GetLength() != 0) {
-		this->x /= this->length;
-		this->y /= this->length;
+	float q = _x * _x + _y * _y;
+	if (!FEqual(q, 0.0f)) {
+		q= Q_rsqrt(q);
+		this->x *= q;
+		this->y *=q;
+		this->length = 1/ q;
 	}
+
 }
 void Vector::SetX(float _x) {
 	this->SetVector(_x, this->y);
@@ -109,6 +114,18 @@ Vector* Vector::operator*(float* _b)
 	}
 }
 
+Vector* Vector::operator*(Vector* _b)
+{
+	if (_b != nullptr) {
+		float x = this->GetX() * _b->GetX() / _b->GetLength();
+		float y = this->GetY() * _b->GetY() / _b->GetLength();
+		return new Vector(x, y);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
+
 Vector* Vector::operator/(float* _b)
 {
 	if(_b!=nullptr){
@@ -123,6 +140,18 @@ Vector* Vector::operator/(float* _b)
 		y = 0;
 	}
 	return new Vector(x, y);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
+
+Vector* Vector::operator/(Vector* _b)
+{
+	if (_b != nullptr) {
+		float x = (this->GetX() / _b->GetX()) * _b->GetLength();
+		float y = (this->GetY() / _b->GetY()) * _b->GetLength();
+		return new Vector(x, y);
 	}
 	else {
 		throw NULLPTRARGEX;
@@ -161,6 +190,28 @@ void Vector::operator/=(float* _b)
 		throw NULLPTRARGEX;
 	}
 }
+void Vector::operator*=(Vector* _b)
+{
+	if (_b != nullptr) {
+		float x = this->GetX() * _b->GetX() / _b->GetLength();
+		float y = this->GetY() * _b->GetY() / _b->GetLength();
+		this->SetVector(x, y);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
+void Vector::operator/=(Vector* _b)
+{
+	if (_b != nullptr) {
+		float x = this->GetX() / _b->GetX() * _b->GetLength();
+		float y = this->GetY() / _b->GetY() * _b->GetLength();
+		this->SetVector(x, y);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
 Line::Line(Position* _a, Position* _b) { 
 	if(_a!=nullptr&&_b!=nullptr){
 	this->Apoint = _a;
@@ -169,6 +220,30 @@ Line::Line(Position* _a, Position* _b) {
 	this->a = y1 - y2;
 	this->b = x2 - x1;
 	this->c = x1 * y2 - x2 * y1;
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
+Line::Line(Position* _a, float _normalx, float _normaly) {
+	if (_a != nullptr) {
+		this->a = _normalx;
+		this->b = _normaly;
+		this->Apoint = _a;
+		this->c = (-1) * (this->a*_a->GetX()+this->b*_a->GetY());
+		this->Bpoint = new Position(_a->GetX() + 1, this->GetY(_a->GetX()+1));
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
+Line::Line(Position* _a, Vector* _normal) {
+	if (_a != nullptr&&_normal!=nullptr) {
+		this->a = _normal->GetX()*_normal->GetLength();
+		this->b = _normal->GetY() * _normal->GetLength();
+		this->Apoint = _a;
+		this->c = (-1) * (this->a * _a->GetX() + this->b * _a->GetY());
+		this->Bpoint = new Position(_a->GetX() + 1, this->GetY(_a->GetX() + 1));
 	}
 	else {
 		throw NULLPTRARGEX;
@@ -305,7 +380,17 @@ void Collision::SetVelocity(Vector* _v)
 	}
 }
 
-Vector Collision::CheckCollision(Collision* _b)
+Position* Collision::CheckLine(Position* _from, Line* _to)
+{
+	return nullptr;
+}
+
+Vector* Collision::GetNormal(Position* _b)
+{
+	return nullptr;
+}
+
+Vector* Collision::CheckCollision(Collision* _b)
 {
 	if (_b != nullptr) {
 
@@ -361,7 +446,7 @@ void Engine::AddObj(Object* _newObj) {
 
 }
 
-Sphere::Sphere(float _radius, Position* _initPos, Vector* _initMV)
+Ñircle::Ñircle(float _radius, Position* _initPos, Vector* _initMV)
 {
 	if (_initPos!=nullptr&&_initMV!=nullptr) {
 		this->radius = _radius;
@@ -372,26 +457,70 @@ Sphere::Sphere(float _radius, Position* _initPos, Vector* _initMV)
 		throw NULLPTRARGEX;
 	}
 }
-Position* Sphere::CheckLine(Position* _from, Line* _to) {
+Position* Ñircle::CheckLine(Position* _from, Line* _to) {
 	if (_from != nullptr && _to != nullptr) {
-
+		Line tmp = Line(this->position, _to->GetB(), (-1) * _to->GetA());
+		Position* bpos = tmp.CheckIntersection(_to, false);
+		Vector avec = Vector(bpos->GetX()-_from->GetX(),bpos->GetY()-_from->GetY());
+		float newLength = this->radius * this->radius - Vector(bpos->GetX() - this->position->GetX(), bpos->GetY() - this->position->GetY()).GetLength();
+		bpos->SetPosition(bpos->GetX()+avec.GetX()*newLength, bpos->GetY()+avec.GetY()*avec.GetLength());
+		return bpos;//this is bullshit algorithm.
 	}
 	else {
 		throw NULLPTRARGEX;
 	}
 }
 
-Vector Sphere::CheckCollision(Collision* _b)
+Vector* Ñircle::GetNormal(Position* _b)
 {
-	return Vector(0,0);
+	if (_b != nullptr) {
+		float x, y;
+		x = _b->GetX() - this->position->GetX();
+		y = _b->GetY() - this->position->GetY();
+		return new Vector(x,y);
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
 
-void Sphere::Move()
+Vector* Ñircle::CheckCollision(Collision* _b)
+{
+	if (_b != nullptr) {
+		float x, y;
+		x = this->position->GetX() + (this->mv->GetX() * this->mv->GetLength());
+		y = this->position->GetY() + (this->mv->GetY() * this->mv->GetLength());
+		Line* MoveLine = new Line(this->position, new Position(x, y));
+		Position* check = _b->CheckLine(this->position, MoveLine);
+		if (check != nullptr) {
+			if (MoveLine->SegmentBelongment(check)) {
+
+			}
+			else {
+				return nullptr;
+			}
+		}
+		else {
+			return nullptr;
+		}
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
+}
+
+void Ñircle::Move()
 {
 }
 
 Box::Box(float _width, float _height, Position* _initPos, Vector* _initMV)
 {
+	if (_initPos != nullptr && _initMV != nullptr) {
+
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 
 }
 Position* Box::CheckLine(Position* _from, Line* _to) {
@@ -402,9 +531,18 @@ Position* Box::CheckLine(Position* _from, Line* _to) {
 		throw NULLPTRARGEX;
 	}
 }
-Vector Box::CheckCollision(Collision* _b)
+Vector* Box::GetNormal(Position* _b)
 {
-	return Vector(0,0);
+	return nullptr;
+}
+Vector* Box::CheckCollision(Collision* _b)
+{
+	if (_b!=nullptr) {
+
+	}
+	else {
+		throw NULLPTRARGEX;
+	}
 }
 
 void Box::Move()
