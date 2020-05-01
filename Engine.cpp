@@ -446,7 +446,7 @@ void Engine::AddObj(Object* _newObj) {
 
 }
 
-Ñircle::Circle(float _radius, Position* _initPos, Vector* _initMV)
+Circle::Circle(float _radius, Position* _initPos, Vector* _initMV)
 {
 	if (_initPos!=nullptr&&_initMV!=nullptr) {
 		this->radius = _radius;
