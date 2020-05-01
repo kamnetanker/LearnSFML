@@ -5,8 +5,8 @@
 #ifndef _IOSTREAM_
 #include <iostream>
 #endif // _IOSTREAM_
-#ifndef _INC_STDLIB
-#include <stdlib.h>
+#ifndef _CSTDLIB_
+#include <cstdlib>
 #endif // _IOSTREAM_
 #ifndef _CMATH_
 #include <cmath>

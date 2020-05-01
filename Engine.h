@@ -7,10 +7,10 @@
 #endif
 #ifndef _SFML_Engine
 #define _SFML_Engine
-#endif
+#endif 
 class Position {
 protected:
-	float x, y;
+	float x, y; 
 public: 
 	Position(float _x, float _y);
 	virtual void SetX(float _x);
@@ -77,11 +77,11 @@ public:
 	virtual Vector* CheckCollision(Collision* _b);
 	virtual void Move();
 };
-class Ñircle :public Collision {
+class Circle :public Collision {
 protected:
 	float radius; 
 public:
-	Ñircle(float _radius, Position* _initPos, Vector* _initMV = new Vector(0, 0));
+	Circle(float _radius, Position* _initPos, Vector* _initMV = new Vector(0, 0));
 	Position* CheckLine(Position* _from, Line* _to);
 	Vector* GetNormal(Position* _b);
 	Vector* CheckCollision(Collision* _b);

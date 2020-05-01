@@ -394,7 +394,7 @@ Vector* Collision::CheckCollision(Collision* _b)
 {
 	if (_b != nullptr) {
 
-		return Vector(0, 0);
+		return &Vector(0, 0);
 	}
 	else {
 		throw NULLPTRARGEX;
@@ -446,7 +446,7 @@ void Engine::AddObj(Object* _newObj) {
 
 }
 
-Ñircle::Ñircle(float _radius, Position* _initPos, Vector* _initMV)
+Ñircle::Circle(float _radius, Position* _initPos, Vector* _initMV)
 {
 	if (_initPos!=nullptr&&_initMV!=nullptr) {
 		this->radius = _radius;
@@ -457,7 +457,7 @@ void Engine::AddObj(Object* _newObj) {
 		throw NULLPTRARGEX;
 	}
 }
-Position* Ñircle::CheckLine(Position* _from, Line* _to) {
+Position* Circle::CheckLine(Position* _from, Line* _to) {
 	if (_from != nullptr && _to != nullptr) {
 		Line tmp = Line(this->position, _to->GetB(), (-1) * _to->GetA());
 		Position* bpos = tmp.CheckIntersection(_to, false);
@@ -471,7 +471,7 @@ Position* Ñircle::CheckLine(Position* _from, Line* _to) {
 	}
 }
 
-Vector* Ñircle::GetNormal(Position* _b)
+Vector* Circle::GetNormal(Position* _b)
 {
 	if (_b != nullptr) {
 		float x, y;
@@ -484,7 +484,7 @@ Vector* Ñircle::GetNormal(Position* _b)
 	}
 }
 
-Vector* Ñircle::CheckCollision(Collision* _b)
+Vector* Circle::CheckCollision(Collision* _b)
 {
 	if (_b != nullptr) {
 		float x, y;
@@ -509,7 +509,7 @@ Vector* Ñircle::CheckCollision(Collision* _b)
 	}
 }
 
-void Ñircle::Move()
+void Circle::Move()
 {
 }
 
